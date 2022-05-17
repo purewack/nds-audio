@@ -25,6 +25,9 @@ enum {
 	srate = 32000
 };
 
+int16_t sint_init(int16_t p){
+	return sinLerp((p<<8)-32768);
+}
 /***********************************************************************************
  * on_stream_request
  *
@@ -67,7 +70,7 @@ int main( void ) {
 	consoleDemoInit();
 	iprintf( "\n YoYo libintdsp \n");
 	
-	libintdsp_init(&gg);
+	libintdsp_init(&gg,sint_init);
 	node_t* daca = new_dac(&gg, "left", &spl_a);
 	node_t* dacb = new_dac(&gg, "right", &spl_b);
 	

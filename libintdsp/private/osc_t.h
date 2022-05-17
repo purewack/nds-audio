@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include "libintdsp.h"
 
 typedef struct osc_t osc_t;
 

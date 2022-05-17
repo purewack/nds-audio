@@ -1,18 +1,19 @@
 #include "libintdsp.h"
-#include "private.h"
+#include "private/private.h"
+
 
 spl_t sint[LUT_COUNT];
 spl_t sawt[LUT_COUNT];
 
-void libintdsp_init(agraph_t* gg){
+void libintdsp_init(agraph_t* gg,  int16_t(*sin_fn)(int16_t phase)){
     LOGL("libintdsp->init(): init graph and lookup tables");
     gg->nodes_count = 0;
     gg->wires_count = 0;
-    gg->stale = false;
+    gg->stale = 0;
 	
     for(int i=0; i<LUT_COUNT; i++){
         sawt[i] = (i<<8) - ((1<<15)-1);
-        sint[i] = sinLerp((i<<8)-32768);
+        sint[i] = sin_fn(i);
     }
 }
 
@@ -45,13 +46,13 @@ void del_node(agraph_t* gg, node_t* n){
 
 int connect(agraph_t* gg, node_t* src, node_t* dst){
     
-    bool dupe = 0;
+    uint8_t dupe = 0;
     int wc = gg->wires_count;
     for(int i=0; i < wc; i++){
         if(gg->wires[i].src == src){
             for(int j=0; j < wc; j++){
                 if(gg->wires[i].dst == dst){
-                    dupe = true;
+                    dupe = 1;
                     break;
                 }
             }   
@@ -127,7 +128,7 @@ void recalc_graph(agraph_t* gg){
     //sort it out lol
     while(sorted_count != gg->nodes_count){
         
-        node_t* remain[gg->nodes_count];
+        node_t* remain[64];
         int remain_count = 0;
         
         //get remaining nodes

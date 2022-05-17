@@ -1,4 +1,4 @@
-#include "types.h"
+#include "libintdsp.h"
 #include "nodes.h"
 
 void proc_osc(void* v){

@@ -1,14 +1,12 @@
 #pragma once
-#include "types.h"
+#include "../libintdsp.h"
 
-typedef struct adr_t adr_t;
-
-struct adr_t{
+typedef struct adr_t{
   node_t* io;
   int32_t a_v, r_v, a;
   int32_t vv,v;
-  bool state, old_state;
-};
+  uint8_t state, old_state;
+} adr_t;
 
 node_t* new_adr(agraph_t* graph, char* signature);
 void proc_adr(void* processor);

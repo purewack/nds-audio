@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "libintdsp.h": "c",
+        "config.h": "c",
+        "private.h": "c"
+    }
+}
