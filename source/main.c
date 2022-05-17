@@ -6,9 +6,6 @@
 #include <stdio.h>
 #include <maxmod9.h>
 #include "libintdsp.h"
-#include "osc_t.h"
-#include "adr_t.h"
-#include "lpf_t.h"
 
 agraph_t gg;
 node_t* osc;

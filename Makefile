@@ -17,7 +17,7 @@ include $(DEVKITARM)/ds_rules
 TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source libintdsp/private
-INCLUDES	:=	include libintdsp
+INCLUDES	:=	include libintdsp libintdsp/private
 
 #---------------------------------------------------------------------------------
 # options for code generation

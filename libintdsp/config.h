@@ -1,8 +1,5 @@
 #pragma once
 
-#include <nds.h>
-#include <stdio.h>
-
 #ifndef DEBUG
     #define LOGL(X) 
     #define LOGNL(X)

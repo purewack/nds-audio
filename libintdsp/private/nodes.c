@@ -1,7 +1,5 @@
-#include "libintdsp.h"
-#include "osc_t.h"
-#include "lpf_t.h"
-#include "adr_t.h"
+#include "types.h"
+#include "nodes.h"
 
 void proc_osc(void* v){
   osc_t* oo = (osc_t*)v;
