@@ -1,0 +1,29 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\devkitPro\\libnds\\include",
+                "C:\\devkitPro\\libnds\\include\\sys",
+                "C:\\devkitPro\\libnds\\include\\nds",
+                "C:\\devkitPro\\libnds\\include\\nds\\arm7",
+                "C:\\devkitPro\\libnds\\include\\nds\\arm9",
+                "C:\\devkitPro\\libnds\\include\\arpa",
+                "C:\\devkitPro\\libnds\\include\\netinet",
+                "C:\\devkitPro\\devkitARM\\include\\gdb"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
