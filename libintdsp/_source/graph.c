@@ -1,48 +1,5 @@
 #include "libintdsp.h"
-#include "private/private.h"
-
-
-spl_t sint[LUT_COUNT];
-spl_t sawt[LUT_COUNT];
-
-void libintdsp_init(agraph_t* gg,  int16_t(*sin_fn)(int16_t phase)){
-    LOGL("libintdsp->init(): init graph and lookup tables");
-    gg->nodes_count = 0;
-    gg->wires_count = 0;
-    gg->stale = 0;
-	
-    for(int i=0; i<LUT_COUNT; i++){
-        sawt[i] = (i<<8) - ((1<<15)-1);
-        sint[i] = sin_fn(i);
-    }
-}
-
-node_t* new_node(agraph_t* gg, char* sig){
-    node_t* n = (node_t*)malloc(sizeof(node_t));
-    n->deps_count = 0;
-    n->sig = sig;
-    if(gg->nodes_count)
-        gg->nodes = (node_t**)realloc(gg->nodes, sizeof(node_t*) * (gg->nodes_count+1));
-    else
-        gg->nodes = (node_t**)malloc(sizeof(node_t*) * 1);
-        
-    gg->nodes[gg->nodes_count] = n;
-    gg->nodes_count++;
-    
-    gg->stale = 1;
-    
-    return n;
-}
-
-void del_node(agraph_t* gg, node_t* n){
-    LOGL("del_node():");
-    LOGL(n->sig);
-    for(int i=0; i<gg->wires_count; i++){
-        int dis = 0;
-        if(gg->wires[i].src == n) dis = 1;
-        if(gg->wires[i].dst == n) dis = 1;
-    }
-}
+#include <stdlib.h>
 
 int connect(agraph_t* gg, node_t* src, node_t* dst){
     
@@ -223,18 +180,3 @@ void proc_graph(agraph_t* gg){
     }
 }
 
-
-void proc_dac(void* v){
-    dac_t* d = (dac_t*)v;
-    *(d->out_spl) = d->io->in;
-}
-node_t* new_dac(agraph_t* gg, char* sig, int16_t* out_spl){
-    node_t* b = new_node(gg,sig);
-    dac_t* n = (dac_t*)malloc(sizeof(dac_t));
-    LOGL("new node: created");
-    b->processor = n;
-    b->processor_func = proc_dac;
-    n->io = b;
-    n->out_spl = out_spl;
-    return b;
-}

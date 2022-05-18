@@ -1,5 +1,70 @@
 #include "libintdsp.h"
-#include "nodes.h"
+#include <stdlib.h>
+
+node_t* new_node(agraph_t* gg, char* sig){
+    node_t* n = (node_t*)malloc(sizeof(node_t));
+    n->deps_count = 0;
+    n->sig = sig;
+    if(gg->nodes_count)
+        gg->nodes = (node_t**)realloc(gg->nodes, sizeof(node_t*) * (gg->nodes_count+1));
+    else
+        gg->nodes = (node_t**)malloc(sizeof(node_t*) * 1);
+        
+    gg->nodes[gg->nodes_count] = n;
+    gg->nodes_count++;
+    
+    gg->stale = 1;
+    
+    return n;
+}
+
+void del_node(agraph_t* gg, node_t* n){
+    LOGL("del_node():");
+    LOGL(n->sig);
+    // for(int i=0; i<gg->wires_count; i++){
+    //     int dis = 0;
+    //     if(gg->wires[i].src == n) dis = 1;
+    //     if(gg->wires[i].dst == n) dis = 1;
+    // }
+}
+
+
+/////////////////////////////////////////////////////////
+
+node_t* new_dac(agraph_t* gg, char* sig, int16_t* out_spl){
+    node_t* b = new_node(gg,sig);
+    dac_t* n = (dac_t*)malloc(sizeof(dac_t));
+    LOGL("new node: created");
+    b->processor = n;
+    b->processor_func = proc_dac;
+    n->io = b;
+    n->out_spl = out_spl;
+    return b;
+}
+void proc_dac(void* v){
+    dac_t* d = (dac_t*)v;
+    *(d->out_spl) = d->io->in;
+}
+
+
+
+/////////////////////////////////////////////////////////
+
+
+node_t* new_osc(agraph_t* gg, char* sig){
+    node_t* b = new_node(gg,sig);
+    osc_t* n = (osc_t*)malloc(sizeof(osc_t));
+    LOGL("new node: osc");
+    LOGL(sig);
+    n->bias = 0;
+    n->acc = 900;
+    n->table = sint;
+    n->gain = 255;
+    b->processor = (node_t*)n;
+    b->processor_func = proc_osc;
+    n->io = b;
+    return b;
+}
 
 void proc_osc(void* v){
   osc_t* oo = (osc_t*)v;
@@ -23,25 +88,14 @@ void proc_osc(void* v){
   else
     oo->phi += oo->acc;
 }
-node_t* new_osc(agraph_t* gg, char* sig){
-    node_t* b = new_node(gg,sig);
-    osc_t* n = (osc_t*)malloc(sizeof(osc_t));
-    LOGL("new node: osc");
-    LOGL(sig);
-    n->bias = 0;
-    n->acc = 900;
-    n->table = sint;
-    n->gain = 255;
-    b->processor = (node_t*)n;
-    b->processor_func = proc_osc;
-    n->io = b;
-    return b;
-}
+
 void set_osc_freq(osc_t* oo, uint32_t f_big, uint32_t srate){
   //256 = fixed int resolution for multiplication
   int32_t a = LUT_COUNT*256*f_big;
   oo->acc = a / srate / 10;
 }
+
+/////////////////////////////////////////////////////////
 
 node_t* new_adr(agraph_t* gg, char* sig){
     node_t* b = new_node(gg,sig);
@@ -83,6 +137,8 @@ void set_adr_release_ms(adr_t* a, uint32_t ms, uint32_t srate){
   a->r_v = (1<<20) / s; //16777216.f * 2.f/32000.f)
 }
 
+//////////////////////////////////////////////////////////
+
 node_t* new_lpf(agraph_t* gg, char* sig){
     node_t* b = new_node(gg,sig);
     lpf_t* n = (lpf_t*)malloc(sizeof(lpf_t));
@@ -95,6 +151,7 @@ node_t* new_lpf(agraph_t* gg, char* sig){
     n->a = (1<<12) - 1;
     return b;
 }
+
 void proc_lpf(void* l){
   lpf_t* p = (lpf_t*)l;
   p->h = p->h + ((p->a * (p->io->in - p->h))>>12);
@@ -102,6 +159,7 @@ void proc_lpf(void* l){
   p->h3 = p->h3 + ((p->a * (p->h2 - p->h3))>>12);
   p->io->out = p->h3;
 }
+
 void set_lpf_freq(lpf_t* l, uint32_t f_norm, uint32_t srate){
   l->a = (f_norm<<12) / srate;
 }

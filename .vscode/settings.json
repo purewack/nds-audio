@@ -6,6 +6,7 @@
         "stdlib.h": "c",
         "lib.h": "c",
         "nodes.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "tables.h": "c"
     }
 }

@@ -39,17 +39,12 @@ mm_word on_stream_request( mm_word length, mm_addr dest, mm_stream_formats forma
 	s16 *target = dest;
 	
 	int len = length;
-	s16 s = 0;
-	
+
 	for( ; len; len-- )
 	{
-		// proc_osc(osc->processor);
-		// proc_osc(osc2->processor);
-		// s = osc->out + osc2->out;
 		proc_graph(&gg);
-		s = spl_a + spl_b;
-		*target++ = s;
-		*target++ = s;
+		*target++ = spl_a;
+		*target++ = spl_b;
 	}
 	
 	
@@ -103,8 +98,8 @@ int main( void ) {
 	connect(&gg,osc,dacb);
 	
 	connect(&gg,osc2,adr);
-	connect(&gg,osc3,adr);
-	connect(&gg,adr,lpf);
+	connect(&gg,adr,dacb);
+	connect(&gg,osc3,lpf);
 	connect(&gg,lpf,daca);
 	
 	//----------------------------------------------------------------
