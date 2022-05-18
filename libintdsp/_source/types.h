@@ -56,4 +56,7 @@ typedef struct lpf_t{
   node_t* io;
   int32_t h, h2, h3;
   int32_t a;
+  int32_t a_big;
+  int32_t a_target;
+  int32_t a_dt;
 } lpf_t;

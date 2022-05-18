@@ -158,8 +158,23 @@ void proc_lpf(void* l){
   p->h2 = p->h2 + ((p->a * (p->h - p->h2))>>12);
   p->h3 = p->h3 + ((p->a * (p->h2 - p->h3))>>12);
   p->io->out = p->h3;
+  
+  p->a_big += p->a_dt;
+  p->a = p->a_big>>8;
+  if(p->a == p->a_target) p->a_dt = 0;
 }
 
 void set_lpf_freq(lpf_t* l, uint32_t f_norm, uint32_t srate){
-  l->a = (f_norm<<12) / srate;
+  l->a_target = 0;
+  l->a_dt = 0;
+  l->a_big = (f_norm<<12) / srate;
+  l->a_big <<= 8;
+}
+
+void set_lpf_freq_slide(lpf_t* l, uint32_t f_norm, uint32_t t_ms, uint32_t srate){
+  l->a_target = (f_norm<<12) / srate;
+
+  int32_t s = srate*t_ms / 1000;
+  l->a_dt = (1<<20) / s; 
+  if(l->a_target < l->a) l->a_dt *= -1;
 }

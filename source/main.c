@@ -22,7 +22,7 @@ enum {
 	// red cpu usage
 	cpu_colour = 31,
 
-	srate = 32000
+	srate = 25000
 };
 
 int16_t sint_init(int16_t p){
@@ -78,9 +78,9 @@ int main( void ) {
 	((osc_t*)lfo->processor)-> bias = ((osc_t*)osc->processor)->acc;
 	
 	node_t* osc2 = new_osc(&gg,"lol");
-	set_osc_freq((osc_t*)osc2->processor, 4000, srate);
+	set_osc_freq((osc_t*)osc2->processor, 4400, srate);
 	node_t* osc3 = new_osc(&gg,"lol");
-	set_osc_freq((osc_t*)osc3->processor, 2500, srate);
+	set_osc_freq((osc_t*)osc3->processor, 6600, srate);
 	
 	((osc_t*)osc2->processor)->table = sawt;
 	((osc_t*)osc3->processor)->table = sawt;
@@ -99,6 +99,7 @@ int main( void ) {
 	
 	connect(&gg,osc2,adr);
 	connect(&gg,adr,dacb);
+
 	connect(&gg,osc3,lpf);
 	connect(&gg,lpf,daca);
 	
@@ -169,10 +170,17 @@ int main( void ) {
 
 		if( keysD & KEY_X) {
 			pp++;
-			set_osc_freq((osc_t*)lfo->processor, 30, 24000);
+			set_osc_freq((osc_t*)lfo->processor, 30, srate);
 		}
 		if( keysU & KEY_X) {
-			set_osc_freq((osc_t*)lfo->processor, 10, 24000);
+			set_osc_freq((osc_t*)lfo->processor, 10, srate);
+		}
+
+		if( keysD & KEY_A) {
+			set_lpf_freq_slide((lpf_t*)(lpf->processor), 16000, 500, srate);
+		}
+		if( keysU & KEY_A) {
+			set_lpf_freq_slide((lpf_t*)(lpf->processor), 2900, 1500, srate);
 		}
 		
 		// if( keys & KEY_X) set_osc_freq((osc_t*)lfo->processor, 10, 24000);
@@ -182,7 +190,6 @@ int main( void ) {
 		// 	BG_PALETTE_SUB[0] = bg_colour;
 		// }
 		((adr_t*)(adr->processor))->state = (keysC & KEY_Y);
-		set_lpf_freq((lpf_t*)(lpf->processor), (keysC & KEY_B) ? 2900 : 16000, 24000);
 		
 		
 	}

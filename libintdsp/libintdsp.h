@@ -28,3 +28,4 @@ void set_adr_attack_ms(adr_t* processor, uint32_t ms, uint32_t srate);
 void set_adr_release_ms(adr_t* processor, uint32_t ms, uint32_t srate);
 
 void set_lpf_freq(lpf_t* processor, uint32_t f_0, uint32_t srate);
+void set_lpf_freq_slide(lpf_t* processor, uint32_t f_0, uint32_t time_ms, uint32_t srate);
