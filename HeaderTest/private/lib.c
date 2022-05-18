@@ -1,4 +1,4 @@
-#include "../include/lib.h"
+#include "lib.h"
 #include <stdlib.h>
 
 node_t* new_node(char* sig){

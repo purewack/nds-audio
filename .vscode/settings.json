@@ -2,6 +2,10 @@
     "files.associations": {
         "libintdsp.h": "c",
         "config.h": "c",
-        "private.h": "c"
+        "private.h": "c",
+        "stdlib.h": "c",
+        "lib.h": "c",
+        "nodes.h": "c",
+        "types.h": "c"
     }
 }
