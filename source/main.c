@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <maxmod9.h>
 #include "libintdsp.h"
+#include "gfx.h"
 
 agraph_t gg;
 node_t* osc;
@@ -58,19 +59,17 @@ mm_word on_stream_request( mm_word length, mm_addr dest, mm_stream_formats forma
  **********************************************************************************/
 int main( void ) {
 //---------------------------------------------------------------------------------
-
+	initFrame();
 	//----------------------------------------------------------------
 	// print out some stuff
 	//----------------------------------------------------------------
-	consoleDemoInit();
-	iprintf( "\n YoYo libintdsp \n");
 	
 	libintdsp_init(&gg,sint_init);
 	node_t* daca = new_dac(&gg, "left", &spl_a);
 	node_t* dacb = new_dac(&gg, "right", &spl_b);
 	
 	osc = new_osc(&gg,"lol");
-	set_osc_freq((osc_t*)osc->processor, 10000, srate);
+	set_osc_freq((osc_t*)osc->processor, 3300, srate);
 	
 	node_t* lfo = new_osc(&gg,"lfo");
 	set_osc_freq((osc_t*)lfo->processor, 10, srate);
@@ -141,28 +140,26 @@ int main( void ) {
 	SetYtrigger( 0 );
 	irqEnable( IRQ_VCOUNT );
 	
-	int cc = 0;
-	int pp = 0;
+	s16 cc = 0;
+	s16 pp = 0;
 	
 	while( 1 )
 	{
 		iprintf( "\x1b[2;0HFPS counter: %d\n", cc++);
-		iprintf( "\x1b[3;0HPP counter: %d\n", pp);
+		iprintf( "\x1b[3;0HPP counter: %d\n", sinLerp(pp+=4));
 
 		// update stream
 		mmStreamUpdate();
 		
-		// restore backdrop (some lines were drawn with another colour to show cpu usage)
-		//BG_PALETTE_SUB[0] = bg_colour;
 		
+		onFrame();
+
 		// wait until next frame
 		swiWaitForVBlank();
 		//-----------------------------------------------------
 		// get new keypad input
 		//-----------------------------------------------------
 		
-		BG_PALETTE_SUB[0] = bg_colour;
-
 		scanKeys();
 		int keysD = keysDown();
 		int keysU = keysUp();

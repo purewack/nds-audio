@@ -7,6 +7,7 @@
         "lib.h": "c",
         "nodes.h": "c",
         "types.h": "c",
-        "tables.h": "c"
+        "tables.h": "c",
+        "ndstypes.h": "c"
     }
 }
