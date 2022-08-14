@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-*.nds
+#*.nds
 *.elf
 
 build
